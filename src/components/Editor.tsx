@@ -17,6 +17,17 @@ export function Editor({ noteId }: { noteId: string | null }) {
         S.updateCurrentNoteContent((e.target as HTMLTextAreaElement).value);
     };
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Tab") {
+            e.preventDefault();
+            const { selectionStart, selectionEnd } = e.target as HTMLTextAreaElement;
+            const value = S.noteContent.value!;
+            S.updateCurrentNoteContent(
+                value.substring(0, selectionStart) + "\t" + value.substring(selectionEnd)
+            );
+        }
+    }
+
     return (
         <div className="flex h-full" data-note-id={noteId}>
             <div className="flex-1 flex flex-col">
@@ -35,6 +46,7 @@ export function Editor({ noteId }: { noteId: string | null }) {
                         placeholder="Start writing your note..."
                         value={S.noteContent}
                         onInput={debounce(handleContentChange, 200)}
+                        onKeyDown={handleKeyDown}
                     />
                 </div>
             </div>
