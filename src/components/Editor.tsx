@@ -25,8 +25,8 @@ export function Editor({ noteId }: { noteId: string | null }) {
             S.updateCurrentNoteContent(
                 value.substring(0, selectionStart) + "\t" + value.substring(selectionEnd)
             );
-            e.target.selectionStart = selectionStart + 1;
-            e.target.selectionEnd = selectionStart + 1;
+            (e.target! as HTMLTextAreaElement).selectionStart = selectionStart + 1;
+            (e.target! as HTMLTextAreaElement).selectionEnd = selectionStart + 1;
         }
     }
 
