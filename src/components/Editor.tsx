@@ -1,13 +1,5 @@
 import * as S from "../signals/noteSignals";
 
-const debounce = (fn: any, delay: number) => {
-    let timeout: number;
-    return (e: Event) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => fn(e), delay);
-    };
-};
-
 export function Editor({ noteId }: { noteId: string | null }) {
     const handleTitleChange = (e: Event) => {
         S.updateCurrentNoteTitle((e.target as HTMLInputElement).value);
@@ -19,16 +11,21 @@ export function Editor({ noteId }: { noteId: string | null }) {
 
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Tab") {
+            const target = e.target as HTMLTextAreaElement;
             e.preventDefault();
-            const { selectionStart, selectionEnd } = e.target as HTMLTextAreaElement;
+            const { selectionStart, selectionEnd } = target;
             const value = S.noteContent.value!;
-            S.updateCurrentNoteContent(
-                value.substring(0, selectionStart) + "\t" + value.substring(selectionEnd)
-            );
-            (e.target! as HTMLTextAreaElement).selectionStart = selectionStart + 1;
-            (e.target! as HTMLTextAreaElement).selectionEnd = selectionStart + 1;
+
+            target.value =
+                value.substring(0, selectionStart) +
+                "\t" +
+                value.substring(selectionEnd);
+            target.selectionStart = selectionStart + 1;
+            target.selectionEnd = selectionStart + 1;
+
+            S.updateCurrentNoteContent(target.value);
         }
-    }
+    };
 
     return (
         <div className="flex h-full" data-note-id={noteId}>
@@ -39,7 +36,7 @@ export function Editor({ noteId }: { noteId: string | null }) {
                         placeholder="Untitled"
                         type="text"
                         value={S.noteTitle}
-                        onInput={debounce(handleTitleChange, 200)}
+                        onInput={handleTitleChange}
                     />
                 </div>
                 <div className="flex-1 p-6">
@@ -47,7 +44,7 @@ export function Editor({ noteId }: { noteId: string | null }) {
                         className="mt-4 w-full h-full resize-none border-none bg-transparent p-0 text-lg font-medium outline-none text-gray-50"
                         placeholder="Start writing your note..."
                         value={S.noteContent}
-                        onInput={debounce(handleContentChange, 200)}
+                        onInput={handleContentChange}
                         onKeyDown={handleKeyDown}
                     />
                 </div>
