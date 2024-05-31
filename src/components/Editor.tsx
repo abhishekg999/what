@@ -1,30 +1,57 @@
+import { useEffect, useRef } from "preact/hooks";
+import Quill from "quill";
+
 import * as S from "../signals/noteSignals";
+import "quill/dist/quill.snow.css";
+
+import hljs from "highlight.js";
+import "highlight.js/styles/atom-one-dark-reasonable.min.css";
 
 export function Editor({ noteId }: { noteId: string | null }) {
+    const quillRef = useRef<HTMLDivElement>(null);
+    const quillInstance = useRef<Quill | null>(null);
+
+    useEffect(() => {
+        if (quillRef.current) {
+            quillInstance.current = new Quill(quillRef.current, {
+                theme: "snow",
+                placeholder: "Start writing your note...",
+                modules: {
+                    toolbar: [
+                        ["bold", "italic", "underline", "strike"], 
+                        ["blockquote", "code-block"],
+                        ["link", "image"],
+
+                        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                        [
+                            { list: "ordered" },
+                            { list: "bullet" },
+                            { list: "check" },
+                        ],
+                        [{ script: "sub" }, { script: "super" }],
+                        [{ indent: "-1" }, { indent: "+1" }],
+
+                        [{ color: [] }, { background: [] }],
+                        [{ font: [] }],
+                        [{ align: [] }],
+
+                        ["clean"], 
+                    ],
+                    syntax: { hljs },
+                },
+            });
+
+            quillInstance.current.on("text-change", () => {
+                const content = quillInstance.current?.root.innerHTML || "";
+                S.updateCurrentNoteContent(content);
+            });
+
+            quillInstance.current.root.innerHTML = S.noteContent.value || "";
+        }
+    }, []);
+
     const handleTitleChange = (e: Event) => {
         S.updateCurrentNoteTitle((e.target as HTMLInputElement).value);
-    };
-
-    const handleContentChange = (e: Event) => {
-        S.updateCurrentNoteContent((e.target as HTMLTextAreaElement).value);
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === "Tab") {
-            const target = e.target as HTMLTextAreaElement;
-            e.preventDefault();
-            const { selectionStart, selectionEnd } = target;
-            const value = S.noteContent.value!;
-
-            target.value =
-                value.substring(0, selectionStart) +
-                "\t" +
-                value.substring(selectionEnd);
-            target.selectionStart = selectionStart + 1;
-            target.selectionEnd = selectionStart + 1;
-
-            S.updateCurrentNoteContent(target.value);
-        }
     };
 
     return (
@@ -39,14 +66,8 @@ export function Editor({ noteId }: { noteId: string | null }) {
                         onInput={handleTitleChange}
                     />
                 </div>
-                <div className="flex-1 p-6">
-                    <textarea
-                        className="mt-4 w-full h-full resize-none border-none bg-transparent p-0 text-lg font-medium outline-none text-gray-50"
-                        placeholder="Start writing your note..."
-                        value={S.noteContent}
-                        onInput={handleContentChange}
-                        onKeyDown={handleKeyDown}
-                    />
+                <div className="flex-1 p-4">
+                    <div ref={quillRef} className="quill-editor"/>
                 </div>
             </div>
         </div>

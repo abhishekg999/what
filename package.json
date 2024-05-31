@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@preact/signals": "^1.2.3",
+    "highlight.js": "^11.9.0",
     "install": "^0.13.0",
     "preact": "^10.19.6",
+    "quill": "^2.0.2",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
