@@ -135,6 +135,8 @@ export function Sidebar() {
                         </svg>
                         Settings
                     </a>
+
+                    {/* Export */}
                     <a
                         href="#"
                         className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-50"
@@ -151,11 +153,13 @@ export function Sidebar() {
                             <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
-                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
                             />
                         </svg>
                         Export
                     </a>
+
+                    {/* Import */}
                     <a
                         href="#"
                         className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-50"
@@ -172,7 +176,7 @@ export function Sidebar() {
                             <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
-                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                             />
                         </svg>
                         Import
