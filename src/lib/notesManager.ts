@@ -22,12 +22,13 @@ export function createNewNote(): Note {
 }
 
 export function saveNote(note: Note) {
-    storage.setItem(note.id, note);
+    storage.setItem(note.id, JSON.stringify(note));
 }
 
 export function loadNote(id: string): Note | null {
-    const data = storage.getItem(id);
-    if (data) {
+    const _data = storage.getItem(id);
+    if (_data) {
+        const data = JSON.parse(_data);
         return {
             id: id,
             title: data.title,

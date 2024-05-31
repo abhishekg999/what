@@ -1,12 +1,10 @@
-import { Note } from "./notesManager";
-
-function setItem(key: string, value: Note) {
-    localStorage.setItem(key, JSON.stringify(value));
+function setItem(key: string, value: string) {
+    localStorage.setItem(key, value);
 }
 
-function getItem(key: string): Note {
+function getItem(key: string): string | null {
     const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : null;
+    return value ? value : null;
 }
 
 function removeItem(key: string) {
@@ -40,19 +38,21 @@ function storageImport(data: any) {
     }
 }
 
-function createExportUrl() {
-    const data = storageExport();
-    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+function downloadExport(filename: string) {
+    const jsonString = JSON.stringify(storageExport());
+    const blob = new Blob([jsonString], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    return url;
-}
 
-function loadExportUrl(url: string) {
-    fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-            storageImport(data);
-        });
+    const link = document.createElement("a");
+
+    link.download = filename;
+    link.href = url;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
 }
 
 export {
@@ -62,6 +62,5 @@ export {
     clear,
     storageExport,
     storageImport,
-    createExportUrl,
-    loadExportUrl,
+    downloadExport,
 };

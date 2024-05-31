@@ -1,8 +1,52 @@
+import { useRef } from "preact/hooks";
+import { downloadExport, storageImport } from "../lib/notesStorage";
+import { currentNoteId } from "../signals/userSignals";
+import { loadNoteById } from "../signals/noteSignals";
+
 export function Sidebar() {
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const handleImport = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = (event: Event) => {
+        const input = event.target as HTMLInputElement;
+        if (input.files && input.files.length > 0) {
+            const file = input.files[0];
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                if (e.target?.result) {
+                    try {
+                        const json = JSON.parse(e.target.result as string);
+                        storageImport(json);
+                        currentNoteId.value =
+                            localStorage.getItem("currentNoteId") || null;
+                        if (currentNoteId.value) {
+                            loadNoteById(currentNoteId.value);
+                        }
+                    } catch (error) {
+                        console.error("Error parsing JSON:", error);
+                        alert("The selected file is not a valid JSON.");
+                    }
+                }
+            };
+            reader.readAsText(file);
+        }
+    };
+
+    const handleExport = () => {
+        downloadExport("ahh_notes.json");
+    };
+
     return (
         <div className="hidden border-r bg-gray-800/40 lg:block">
             <div className="flex h-[60px] items-center px-6">
-                <a className="flex items-center gap-2 font-semibold" href="#">
+                {/* HEADER WITH ICON */}
+                <a
+                    className="flex items-center justify-between gap-2 font-semibold"
+                    href="#"
+                >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         stroke-miterlimit="10"
@@ -23,51 +67,126 @@ export function Sidebar() {
                     <span className="">Notes</span>
                 </a>
             </div>
-            <div className="flex-1">
-                <nav className="grid items-start px-4 text-sm font-medium">
+
+            <nav className="grid items-start px-4 text-sm font-medium">
+                <div className="flex-1">
+                    {/* Home */}
                     <a
-                        className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-50"
                         href="#"
+                        className="flex items-center gap-3 rounded-lg bg-gray-800 px-3 py-2 text-gray-50"
                     >
                         <svg
+                            xmlns="http://www.w3.org/2000/svg"
                             className="h-4 w-4"
                             fill="none"
+                            viewBox="0 0 24 24"
                             stroke="currentColor"
                             strokeWidth={2}
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
                         >
                             <path
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                            />
+                        </svg>
+                        Home
+                    </a>
+
+                    {/* Notes */}
+                    <a
+                        href="#"
+                        className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-50"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
                             />
                         </svg>
                         Notes
                     </a>
-
+                </div>
+                <div className="flex-1">
                     <a
-                        className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-50"
                         href="#"
+                        className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-50"
                     >
                         <svg
+                            xmlns="http://www.w3.org/2000/svg"
                             className="h-4 w-4"
                             fill="none"
+                            viewBox="0 0 24 24"
                             stroke="currentColor"
                             strokeWidth={2}
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
                         >
                             <path
-                                d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
+                                d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z"
                             />
                         </svg>
                         Settings
                     </a>
-                </nav>
-            </div>
+                    <a
+                        href="#"
+                        className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-50"
+                        onClick={handleExport}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                            />
+                        </svg>
+                        Export
+                    </a>
+                    <a
+                        href="#"
+                        className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-50"
+                        onClick={handleImport}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                            />
+                        </svg>
+                        Import
+                    </a>
+
+                    <input
+                        type="file"
+                        accept="application/json"
+                        ref={fileInputRef}
+                        style={{ display: "none" }}
+                        onChange={handleFileChange}
+                    />
+                </div>
+            </nav>
         </div>
     );
 }
