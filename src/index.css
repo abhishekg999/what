@@ -81,3 +81,25 @@ button:focus-visible {
     align-items: center;
     justify-content: center;
 }
+
+.ql-editor {
+    max-height: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+    scroll-padding: 3rem;
+}
+
+*::-webkit-scrollbar-track {
+    --track-color: #1a1a1a; /* unused */
+}
+
+*::-webkit-scrollbar {
+    width: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+    --bar-color: #b0b0b0;
+    background-color: var(--bar-color);
+}

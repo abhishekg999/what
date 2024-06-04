@@ -18,7 +18,7 @@ export function Editor({ noteId }: { noteId: string | null }) {
                 placeholder: "Start writing your note...",
                 modules: {
                     toolbar: [
-                        ["bold", "italic", "underline", "strike"], 
+                        ["bold", "italic", "underline", "strike"],
                         ["blockquote", "code-block"],
                         ["link", "image"],
 
@@ -35,7 +35,7 @@ export function Editor({ noteId }: { noteId: string | null }) {
                         [{ font: [] }],
                         [{ align: [] }],
 
-                        ["clean"], 
+                        ["clean"],
                     ],
                     syntax: { hljs },
                 },
@@ -66,8 +66,11 @@ export function Editor({ noteId }: { noteId: string | null }) {
                         onInput={handleTitleChange}
                     />
                 </div>
-                <div className="flex-1 p-4">
-                    <div ref={quillRef} className="quill-editor"/>
+                <div className="flex-1 h-full m-4">
+                    <div
+                        ref={quillRef}
+                        className="quill-editor max-h-[calc(100vh-11rem)] max-w-[calc(100vw-19rem)]"
+                    />
                 </div>
             </div>
         </div>

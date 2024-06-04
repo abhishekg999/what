@@ -23,7 +23,7 @@ export function createNewNote(): Note {
 }
 
 function _saveNote(note: Note) {
-    console.log('set item called');
+    console.log("set item called");
     storage.setItem(note.id, JSON.stringify(note));
 }
 
