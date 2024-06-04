@@ -1,5 +1,6 @@
 import * as storage from "./notesStorage";
 import { v4 as uuidv4 } from "uuid";
+import { debounce } from "./utils";
 
 export type Note = {
     id: string;
@@ -21,9 +22,12 @@ export function createNewNote(): Note {
     };
 }
 
-export function saveNote(note: Note) {
+function _saveNote(note: Note) {
+    console.log('set item called');
     storage.setItem(note.id, JSON.stringify(note));
 }
+
+export const saveNote = debounce(_saveNote, 250);
 
 export function loadNote(id: string): Note | null {
     const _data = storage.getItem(id);
