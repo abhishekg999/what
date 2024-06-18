@@ -32,7 +32,7 @@ export function App() {
                     <div className="flex flex-col">
                         <Header />
                         <main className="flex flex-1 flex-col">
-                            <Editor noteId={currentNoteId.value} />
+                            <Editor />
                         </main>
                     </div>
                 </div>

@@ -1,6 +1,7 @@
 import * as storage from "./notesStorage";
 import { v4 as uuidv4 } from "uuid";
 import { debounce } from "./utils";
+import { allNotes } from "../signals/noteSignals";
 
 export type Note = {
     id: string;
@@ -23,7 +24,6 @@ export function createNewNote(): Note {
 }
 
 function _saveNote(note: Note) {
-    console.log("set item called");
     storage.setItem(note.id, JSON.stringify(note));
 }
 
@@ -46,12 +46,23 @@ export function loadNote(id: string): Note | null {
 }
 
 export function updateNote(note: Note, update: Partial<Note>) {
+    // Compute the updated note and save.
     const updatedNote = {
         ...note,
         ...update,
         modified: new Date(),
     };
     saveNote(updatedNote);
+
+    // Update the allNotes object if title changed (will be saved automatically by effect).
+    if (update.title !== note.title) {
+        allNotes.value = {
+            ...allNotes.value,
+            [updatedNote.id]: updatedNote.title,
+        }
+    }
+    
+
     return updatedNote;
 }
 

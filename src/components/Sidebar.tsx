@@ -1,7 +1,7 @@
 import { useRef } from "preact/hooks";
 import { downloadExport, storageImport } from "../lib/notesStorage";
-import { currentNoteId } from "../signals/userSignals";
-import { loadNoteById } from "../signals/noteSignals";
+import { SidebarHomeTab } from "./SidebarHomeTab";
+import { SidebarNotesTab } from "./SidebarNotesTab";
 
 export function Sidebar() {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -20,11 +20,8 @@ export function Sidebar() {
                     try {
                         const json = JSON.parse(e.target.result as string);
                         storageImport(json);
-                        currentNoteId.value =
-                            localStorage.getItem("currentNoteId") || null;
-                        if (currentNoteId.value) {
-                            loadNoteById(currentNoteId.value);
-                        }
+                        // just mfing reload the page lol
+                        window.location.reload();
                     } catch (error) {
                         console.error("Error parsing JSON:", error);
                         alert("The selected file is not a valid JSON.");
@@ -40,7 +37,7 @@ export function Sidebar() {
     };
 
     return (
-        <div className="hidden border-r bg-gray-800/40 lg:block">
+        <div className="hidden border-r bg-gray-800/40 lg:block overflow-y-scroll">
             <div className="flex h-[60px] items-center px-6">
                 {/* HEADER WITH ICON */}
                 <a
@@ -71,48 +68,11 @@ export function Sidebar() {
             <nav className="grid items-start px-4 text-sm font-medium">
                 <div className="flex-1">
                     {/* Home */}
-                    <a
-                        href="#"
-                        className="flex items-center gap-3 rounded-lg bg-gray-800 px-3 py-2 text-gray-50"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                            />
-                        </svg>
-                        Home
-                    </a>
+                    <SidebarHomeTab />
 
                     {/* Notes */}
-                    <a
-                        href="#"
-                        className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-50"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                            />
-                        </svg>
-                        Notes
-                    </a>
+                    <SidebarNotesTab />
+
                 </div>
                 <div className="flex-1">
                     <a

@@ -12,3 +12,8 @@ export function debounce(func: Function, wait: number): Function {
         }, wait);
     };
 }
+
+export function loadOrDefault(key: string, def: string): string {
+    const value = localStorage.getItem(key);
+    return value || def;
+}
