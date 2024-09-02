@@ -24,7 +24,7 @@ export function App() {
     return (
         <>
             {screenTooSmall.value ? (
-                <div className="text-center">Screen size too small</div>
+                <div className="text-center">Screen size too small :(</div>
             ) : (
                 <div className="grid min-h-screen w-full grid-cols-[280px_1fr] bg-gray-950 text-gray-50">
                     <Sidebar />
